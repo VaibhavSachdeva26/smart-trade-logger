@@ -106,6 +106,7 @@ class TradeHeader(Base):
 
     capital_used = Column(Float)
     margin_required = Column(Float)
+    margin_required = Column(Float)
     lot_size = Column(Integer)
     num_lots = Column(Integer)
     emotion = Column(String)
@@ -113,6 +114,7 @@ class TradeHeader(Base):
     classification = Column(String)
     notes = Column(Text)
     image_path = Column(String)
+    exit_image_path = Column(String, nullable=True)
     is_closed = Column(Integer, default=0)
 
     legs = relationship("TradeLeg", back_populates="trade", cascade="all, delete-orphan")
@@ -128,5 +130,20 @@ class TradeLeg(Base):
     strike = Column(Float)
     premium = Column(Float)
     exit_price = Column(Float)
+    delta = Column(Float, nullable=True)  # option Greek delta for each leg
 
     trade = relationship("TradeHeader", back_populates="legs")
+
+# -----------------------------
+# USER TABLE
+# -----------------------------
+from sqlalchemy import Column, String, Boolean
+
+from sqlalchemy import Column, String, Boolean
+
+class User(Base):
+    __tablename__ = "users"
+
+    username = Column(String, primary_key=True, index=True)
+    password = Column(String, nullable=False)  # will store SHA256 hash
+    is_admin = Column(Boolean, default=False)
